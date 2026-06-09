@@ -1,23 +1,19 @@
-function DashboardCard({
-  titulo,
-  valor,
-  color
-}) {
-
+function DashboardCard({ titulo, valor, color = '#3b82f6', icono }) {
   return (
-    <div
-      style={{
-        backgroundColor: color,
-        padding: "20px",
-        borderRadius: "12px",
-        color: "white",
-        width: "220px",
-        boxShadow: "0px 4px 10px rgba(0,0,0,0.2)"
-      }}
-    >
-      <h3>{titulo}</h3>
-
-      <h1>{valor}</h1>
+    <div className="academic-card">
+      {/* Barra lateral de acento de color */}
+      <div 
+        className="card-accent-bar" 
+        style={{ backgroundColor: color }} 
+      />
+      
+      <div className="card-content">
+        <div className="card-header">
+          <span className="card-title">{titulo}</span>
+          {icono && <span className="card-icon" style={{ color: color }}>{icono}</span>}
+        </div>
+        <div className="card-value">{valor}</div>
+      </div>
     </div>
   );
 }

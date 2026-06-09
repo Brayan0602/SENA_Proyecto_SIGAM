@@ -11,131 +11,96 @@ import Sidebar from "../layouts/components/Sidebar";
 import { obtenerEstudiantes } from "../services/StudentService";
 
 function AdminPanel() {
-
   // NAVEGACIÓN
   const navigate = useNavigate();
 
   // USUARIO ACTUAL
-  const usuario = localStorage.getItem("usuario");
+  const usuario = localStorage.getItem("usuario") || "Administrador";
 
   // ESTADO DE ESTUDIANTES
   const [estudiantes, setEstudiantes] = useState([]);
 
   // CARGAR DATOS
   useEffect(() => {
-
     const cargarEstudiantes = async () => {
-
       try {
-
         const datos = await obtenerEstudiantes();
-
         setEstudiantes(datos || []);
-
       } catch (error) {
-
-        console.error(
-          "Error cargando estudiantes:",
-          error
-        );
-
+        console.error("Error cargando estudiantes:", error);
       }
-
     };
 
     cargarEstudiantes();
-
   }, []);
 
   // CERRAR SESIÓN
   const cerrarSesion = () => {
-
     localStorage.clear();
-
     navigate("/");
-
   };
 
   return (
-
     <div className="layout-admin">
+      {/* COMPONENTE SIDEBAR LATERAL */}
+      <Sidebar />
 
-  <Sidebar />
+      <div className="panel-container">
+        {/* NAVBAR SUPERIOR */}
+        <Navbar titulo="SIGAM - Panel Administrador" />
 
-  <div className="panel-container">
+        {/* SECCIÓN DE BIENVENIDA INSTITUCIONAL */}
+        <header className="welcome-banner">
+          <h2>Bienvenido, {usuario}</h2>
+          <p>Panel de gestión académica del sistema SIGAM.</p>
+        </header>
 
-      {/* NAVBAR */}
-      <Navbar titulo="SIGAM - Panel Administrador" />
+        {/* REJILLA DE TARJETAS (MÉTRICAS) */}
+        <section className="dashboard-grid">
+          <DashboardCard
+            titulo="Estudiantes"
+            valor={estudiantes.length}
+            color="#1e40af" /* Azul institucional unificado */
+            icono="🎓"
+          />
 
-      {/* BIENVENIDA */}
-      <div style={{ marginBottom: "20px" }}>
+          <DashboardCard
+            titulo="Matrículas"
+            valor="24"
+            color="#16a34a" /* Verde de estado activo */
+            icono="📝"
+          />
 
-        <h2>
-          Bienvenido, {usuario}
-        </h2>
+          <DashboardCard
+            titulo="Asignaturas"
+            valor="18"
+            color="#ea580c" /* Naranja sutil */
+            icono="📚"
+          />
+        </section>
 
-        <p>
-          Panel de gestión académica del sistema SIGAM.
-        </p>
+        {/* COMPONENTE FORMULARIO DE ACCIÓN */}
+        <section className="form-section">
+          <StudentForm />
+        </section>
 
+        {/* BOTONERA DE ACCIONES SECUNDARIAS */}
+        <footer className="botones-panel">
+          <button className="btn-secondary">
+            Gestionar Estudiantes
+          </button>
+          
+          <button className="btn-secondary">
+            Generar Reportes
+          </button>
+          
+          <button onClick={cerrarSesion} className="btn-danger-action">
+            Cerrar Sesión
+          </button>
+        </footer>
       </div>
-
-      {/* DASHBOARD */}
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-          marginBottom: "30px"
-        }}
-      >
-
-        <DashboardCard
-          titulo="Estudiantes"
-          valor={estudiantes.length}
-          color="#2563eb"
-        />
-
-        <DashboardCard
-          titulo="Matrículas"
-          valor="24"
-          color="#16a34a"
-        />
-
-        <DashboardCard
-          titulo="Asignaturas"
-          valor="18"
-          color="#ea580c"
-        />
-
-      </div>
-
-      {/* FORMULARIO */}
-      <StudentForm />
-
-      {/* BOTONES */}
-      <div className="botones-panel">
-
-        <button>
-          Gestionar Estudiantes
-        </button>
-
-        <button>
-          Generar Reportes
-        </button>
-
-        <button onClick={cerrarSesion}>
-          Cerrar Sesión
-        </button>
-
-      </div>
-    
-     </div>
-
     </div>
-
   );
-
 }
 
 export default AdminPanel;
